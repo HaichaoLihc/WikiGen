@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wiki</title>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<style>
+  :root { --bg:#fbfbfa; --panel:#f3f2ef; --text:#1f1f1d; --muted:#6f6e69; --line:#e3e1dc; --accent:#2f6feb; --chip:#eceae5; --code:#f1efea; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#191918; --panel:#201f1e; --text:#e8e6e1; --muted:#9b9993; --line:#33322f; --accent:#7aa7ff; --chip:#2b2a28; --code:#262523; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.65 -apple-system, "Segoe UI", Inter, sans-serif; }
+  a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
+  header { position:sticky; top:0; z-index:2; display:flex; align-items:center; gap:12px; height:52px; padding:0 20px;
+           background:var(--bg); border-bottom:1px solid var(--line); }
+  header strong { font-size:16px; } header select { font:inherit; padding:4px 8px; border:1px solid var(--line); border-radius:6px;
+           background:var(--panel); color:var(--text); }
+  header .meta { color:var(--muted); font-size:13px; margin-left:auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .layout { display:grid; grid-template-columns:280px minmax(0,1fr) 220px; max-width:1400px; margin:0 auto; }
+  nav, aside { position:sticky; top:52px; height:calc(100vh - 52px); overflow:auto; padding:18px 12px; font-size:14px; }
+  nav { border-right:1px solid var(--line); }
+  nav a { display:block; padding:5px 10px; border-radius:6px; color:var(--text); }
+  nav a:hover { background:var(--panel); text-decoration:none; }
+  nav a.active { background:var(--chip); font-weight:600; }
+  aside h4 { margin:0 0 8px; font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; }
+  aside a { display:block; padding:3px 0; color:var(--muted); }
+  main { padding:28px 44px 120px; min-width:0; }
+  main h1 { font-size:28px; margin:0 0 14px; line-height:1.25; }
+  main h2 { font-size:21px; margin:38px 0 10px; padding-top:22px; border-top:1px solid var(--line); }
+  main h3 { font-size:17px; margin:26px 0 8px; }
+  main code { background:var(--code); padding:1px 5px; border-radius:4px; font:13px ui-monospace, Menlo, monospace; }
+  main pre { background:var(--code); padding:14px; border-radius:8px; overflow:auto; } main pre code { padding:0; background:none; }
+  main table { border-collapse:collapse; display:block; overflow:auto; margin:14px 0; }
+  main th, main td { border:1px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; } main th { background:var(--panel); }
+  .cite { display:inline-block; margin:0 2px; padding:0 7px; border-radius:6px; background:var(--chip); color:var(--muted);
+          font:12px/1.7 ui-monospace, Menlo, monospace; white-space:nowrap; vertical-align:baseline; }
+  .cite:hover { color:var(--accent); text-decoration:none; }
+  details.sources { border:1px solid var(--line); border-radius:8px; padding:8px 14px; margin:0 0 20px; background:var(--panel); }
+  details.sources summary { cursor:pointer; font-weight:600; font-size:14px; }
+  details.sources ul { margin:8px 0 4px; padding-left:18px; font:13px ui-monospace, Menlo, monospace; columns:2; }
+  .mermaid { display:flex; justify-content:center; margin:18px 0; padding:14px; border:1px solid var(--line); border-radius:8px; background:#fff; overflow:auto; }
+  .empty { color:var(--muted); padding:40px 0; }
+  @media (max-width: 1000px) { .layout { grid-template-columns:240px minmax(0,1fr); } aside { display:none; } main { padding:22px; } }
+  @media (max-width: 700px) { .layout { display:block; } nav { position:static; height:auto; max-height:38vh; border-right:0; border-bottom:1px solid var(--line); }
+    main { overflow-wrap:anywhere; } details.sources ul { columns:1; } }
+</style>
+</head>
+<body>
+<header><strong>Wiki</strong><select id="wikis" aria-label="Repository"></select><span class="meta" id="meta"></span></header>
+<div class="layout"><nav id="nav"></nav><main id="page"></main><aside id="outline"></aside></div>
+<script>
+const CITATION = /\[([^\[\]\s:]+):(\d+)(?:-(\d+))?\]/g;   // [path/to/file.py:10-42]
+const $ = id => document.getElementById(id);
+let wiki = null, toc = null;
+mermaid.initialize({ startOnLoad: false, securityLevel: "strict" });
+
+async function listWikis() {
+  const names = await (await fetch("/wikis.json")).json();
+  $("wikis").innerHTML = names.map(n => `<option>${n}</option>`).join("");
+  return names;
+}
+
+async function start() {
+  const names = await listWikis();
+  $("wikis").onchange = () => { location.hash = `#/${$("wikis").value}/overview`; };
+  window.onhashchange = show;
+  if (!location.hash && names.length) location.hash = `#/${names[0]}/overview`;
+  else show();
+}
+
+// The address is #/<wiki>/<page id>.
+async function show() {
+  const [, name, pageId = "overview"] = location.hash.split("/");
+  if (!name) { $("page").innerHTML = '<p class="empty">No wikis found in the output folder yet.</p>'; return; }
+  if (name !== wiki) {
+    wiki = name;
+    await listWikis();  // a wiki generated after the page was opened should appear in the dropdown
+    toc = await (await fetch(`/${wiki}/toc.json`)).json();
+    $("wikis").value = wiki;
+    const source = toc.source || {};
+    $("meta").textContent = [source.url && source.url.replace("https://github.com/", ""), source.commit && source.commit.slice(0, 8),
+                             toc.runtime && `runtime: ${toc.runtime}`, `${toc.pages.length} pages`].filter(Boolean).join(" · ");
+  }
+  const depth = {};
+  for (const p of toc.pages) depth[p.id] = p.parent ? depth[p.parent] + 1 : 0;
+  $("nav").innerHTML = toc.pages.map(p => `<a href="#/${wiki}/${p.id}" class="${p.id === pageId ? "active" : ""}"
+      style="padding-left:${10 + 16 * depth[p.id]}px" title="${p.scope.replace(/"/g, "&quot;")}">${p.title}</a>`).join("");
+
+  const response = await fetch(`/${wiki}/${pageId}.md`);
+  if (!response.ok) { $("page").innerHTML = '<p class="empty">This page has not been written yet.</p>'; $("outline").innerHTML = ""; return; }
+  render(await response.text());
+  window.scrollTo(0, 0);
+}
+
+function sourceLink(path, start, end) {
+  const s = toc.source;
+  return s && s.url ? `${s.url}/blob/${s.commit}/${path}#L${start}${end ? "-L" + end : ""}` : "";
+}
+
+function render(markdown) {
+  const files = [...new Set([...markdown.matchAll(CITATION)].map(m => m[1]))].sort();
+  // Citations become small chips that open the cited lines on GitHub.
+  markdown = markdown.replace(CITATION, (_, path, start, end) => {
+    const label = `${path.split("/").pop()}:${start}${end ? "-" + end : ""}`, href = sourceLink(path, start, end);
+    return `<a class="cite" title="${path}" ${href ? `href="${href}" target="_blank" rel="noopener"` : ""}>${label}</a>`;
+  });
+  let html = marked.parse(markdown);
+  const sources = `<details class="sources"><summary>Relevant source files (${files.length})</summary><ul>` +
+    files.map(f => `<li><a href="${sourceLink(f, 1)}" target="_blank" rel="noopener">${f}</a></li>`).join("") + "</ul></details>";
+  html = html.replace("</h1>", "</h1>" + (files.length ? sources : ""));
+  $("page").innerHTML = html;
+
+  // Links between pages are written as page-id.md; keep them inside the viewer.
+  for (const a of $("page").querySelectorAll('a[href$=".md"]'))
+    if (!a.getAttribute("href").includes("/")) a.href = `#/${wiki}/${a.getAttribute("href").slice(0, -3)}`;
+  for (const code of $("page").querySelectorAll("code.language-mermaid")) {
+    const box = document.createElement("div");
+    box.className = "mermaid"; box.textContent = code.textContent;
+    code.parentElement.replaceWith(box);
+  }
+  mermaid.run({ nodes: $("page").querySelectorAll(".mermaid") }).catch(() => {});
+
+  const headings = [...$("page").querySelectorAll("h2")];
+  headings.forEach((h, i) => { h.id = "s" + i; });
+  $("outline").innerHTML = "<h4>On this page</h4>" + headings.map(h =>
+    `<a href="javascript:void 0" onclick="document.getElementById('${h.id}').scrollIntoView({behavior:'smooth'})">${h.textContent}</a>`).join("");
+}
+start();
+</script>
+</body>
+</html>

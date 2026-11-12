@@ -1,0 +1,6 @@
+[project]
+name = "wikigen"
+version = "0.1.0"
+description = "Generate a DeepWiki-style wiki for a codebase: code graph + co-change -> planner agent -> writer agents."
+requires-python = ">=3.11"
+dependencies = ["graphifyy", "networkx", "scipy", "openai-codex", "python-dotenv"]

@@ -1,0 +1,6 @@
+.env
+.codex-home/
+.venv/
+__pycache__/
+repos/
+out/
