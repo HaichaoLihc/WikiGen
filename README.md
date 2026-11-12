@@ -1,4 +1,4 @@
-# wikigen
+# WikiGen
 
 Generates a DeepWiki-style wiki for a codebase, for humans and coding agents. The agent work is done by OpenAI's Codex coding agent, running read-only inside the repository.
 

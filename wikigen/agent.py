@@ -4,6 +4,7 @@ An Agent is one conversation with memory. `agent.session` identifies it, so a la
 """
 import os
 import threading
+import time
 from collections import Counter
 from functools import cache
 from pathlib import Path
@@ -47,7 +48,7 @@ class Agent:
 
     def ask(self, prompt, schema=None):
         """Send one message and return the agent's final answer (JSON text when a schema is given)."""
-        result = self.thread.run(prompt, output_schema=schema)
+        result = self._run(prompt, schema)
         if result.usage:
             # Codex reports running totals for the conversation; count only what this turn added.
             total = result.usage.total
@@ -58,6 +59,17 @@ class Agent:
                 usage.update(now - self.counted)
             self.counted = now
         return result.final_response or ""
+
+
+    def _run(self, prompt, schema, attempts=6):
+        """Run one turn. A rate limit is per minute, so wait it out and try again instead of failing the run."""
+        for attempt in range(1, attempts + 1):
+            try:
+                return self.thread.run(prompt, output_schema=schema)
+            except RuntimeError as error:
+                if "rate limit" not in str(error).lower() or attempt == attempts:
+                    raise
+                time.sleep(30 * attempt)
 
 
 def ask_checked(agent, prompt, check, schema=None, retries=2):

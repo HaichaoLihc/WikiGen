@@ -4,3 +4,5 @@
 __pycache__/
 repos/
 out/
+# The two wikis under review: one is a full copy of a third-party wiki, so they stay local.
+blind-review/wiki-*.md
