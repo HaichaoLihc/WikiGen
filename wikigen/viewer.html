@@ -58,7 +58,7 @@ let wiki = null, toc = null;
 mermaid.initialize({ startOnLoad: false, securityLevel: "strict" });
 
 async function listWikis() {
-  const names = await (await fetch("/wikis.json")).json();
+  const names = await (await fetch("wikis.json")).json();
   $("wikis").innerHTML = names.map(n => `<option>${n}</option>`).join("");
   return names;
 }
@@ -78,7 +78,7 @@ async function show() {
   if (name !== wiki) {
     wiki = name;
     await listWikis();  // a wiki generated after the page was opened should appear in the dropdown
-    toc = await (await fetch(`/${wiki}/toc.json`)).json();
+    toc = await (await fetch(`${wiki}/toc.json`)).json();
     $("wikis").value = wiki;
     const source = toc.source || {};
     $("meta").textContent = [source.url && source.url.replace("https://github.com/", ""), source.commit && source.commit.slice(0, 8),
@@ -89,7 +89,7 @@ async function show() {
   $("nav").innerHTML = toc.pages.map(p => `<a href="#/${wiki}/${p.id}" class="${p.id === pageId ? "active" : ""}"
       style="padding-left:${10 + 16 * depth[p.id]}px" title="${p.scope.replace(/"/g, "&quot;")}">${p.title}</a>`).join("");
 
-  const response = await fetch(`/${wiki}/${pageId}.md`);
+  const response = await fetch(`${wiki}/${pageId}.md`);
   if (!response.ok) { $("page").innerHTML = '<p class="empty">This page has not been written yet.</p>'; $("outline").innerHTML = ""; return; }
   render(await response.text());
   window.scrollTo(0, 0);
