@@ -55,7 +55,9 @@ def main():
     else:
         print("2/6 planning the table of contents")
         planner = Agent(planner_system, index.repo, args.planner_model)
-        toc = planning.plan(planner, index, args.pages or max(8, min(60, len(index.score) // 12)))
+        # Pages grow with the square root of the code size: about 20 for 100 files, 48 for 570, capped at 60.
+        target = args.pages or max(8, min(60, round(2 * len(index.score) ** 0.5)))
+        toc = planning.plan(planner, index, target)
         save(toc, shaped=False)
         (out / "toc_planner.json").write_text(json.dumps(toc, indent=1))  # kept as the planner wrote it
         print(f"    {len(toc)} pages")

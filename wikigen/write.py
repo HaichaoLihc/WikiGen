@@ -10,7 +10,7 @@ from .plan import TOC_SCHEMA, outline, subtree, tree_problems
 
 CITATION = re.compile(r"\[([^\[\]\s:]+):(\d+)(?:-(\d+))?\]")  # [path/to/file.py:10-42]
 LINK = re.compile(r"\]\(([a-z0-9-]+)\.md\)")                   # [text](other-page.md)
-MAX_SECTION_PAGES = 10  # a writer may grow its section up to this many pages
+MAX_SECTION_PAGES = 18  # a writer may grow its section up to this many pages
 
 SYSTEM = """You write pages of a wiki that documents a codebase, reading the repository as you go. Readers are \
 engineers new to the project and coding agents. Write so a busy reader gets the point fast.
@@ -22,13 +22,15 @@ edge cases that would surprise a newcomer.
 - Use the identifiers and wording of the code and docs. Do not coin new names.
 - Stay inside the page's scope; link to other pages as [Title](page-id.md) instead of repeating them.
 
-Form: pick the format that carries each idea best.
-- A mermaid diagram for structure, flow, lifecycle or interaction (flowchart, sequenceDiagram, classDiagram, \
-stateDiagram-v2). Most pages should have at least one. Label nodes with real names from the code, keep labels \
-short, and wrap any label containing punctuation in double quotes.
+Form: pick the format that carries each idea best, and vary it. Prose plus one flowchart is rarely the best page.
+- A mermaid diagram on most pages, of the type that fits the idea: sequenceDiagram for calls between components \
+over time, classDiagram for types and how they relate, stateDiagram-v2 for a lifecycle or state machine, flowchart \
+for data or control flow. Label nodes with real names from the code and keep labels short. A flowchart \
+node whose label has spaces or punctuation needs an id and a quoted label, like engine["target-state engine"].
 - A table for parallel items: options, parameters, variants, components and their roles, comparisons.
 - A numbered list for steps that happen in order.
-- A short code excerpt (under 15 lines, copied from the repo) when the code itself is the clearest explanation.
+- A code excerpt of 5-15 lines, copied from the repo and cited, wherever the page covers an API, a usage pattern \
+or a key data structure: show the real signature or the real call.
 - Prose, in short paragraphs, for reasoning.
 
 Style:
@@ -44,6 +46,11 @@ Skeleton: "# <title>", then "## Summary" (2-4 sentences a reader can stop after)
 listing the project-specific terms this page explains as "- **Term**: one-line meaning".
 
 When asked for a page, answer with the page's markdown only."""
+
+
+SECTION_PAGE = """This is the section's main page, and a reader may read only this one. Explain the section's \
+core mechanism from end to end: what happens, in what order, and why. Include a table of the key types or functions \
+and the files that define them. Then point to each sub-page for the detail it adds. Aim for 700-1200 words."""
 
 
 class Wiki:
@@ -147,8 +154,10 @@ def write_section(wiki, agent, section):
     for page in reversed(pages):
         if wiki.text(page["id"]):
             continue  # already written by an earlier run
+        main_page = page is pages[0] and len(pages) > 1
         wiki.write(agent, page["id"], intro + f"Write the page '{page['id']}': {page['title']}\n"
-                   f"Scope: {page['scope']}\nStart from: {', '.join(page['files'])}")
+                   f"Scope: {page['scope']}\nStart from: {', '.join(page['files'])}"
+                   + (f"\n\n{SECTION_PAGE}" if main_page else ""))
         intro = ""
 
 

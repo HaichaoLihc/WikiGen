@@ -11,7 +11,7 @@ from pathlib import Path
 
 import networkx as nx
 
-CODE_EXT = {".py", ".rs", ".ts", ".tsx", ".js", ".jsx", ".go", ".java", ".kt", ".c", ".h", ".cc", ".cpp",
+CODE_EXT = {".py", ".rs", ".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs", ".go", ".java", ".kt", ".c", ".h", ".cc", ".cpp",
             ".hpp", ".cs", ".rb", ".php", ".swift", ".scala"}
 MAX_COMMIT_FILES = 30  # bigger commits are sweeps (formatting, renames), not evidence of coupling
 MAX_CLUSTER = 40       # clusters with more files than this are split again

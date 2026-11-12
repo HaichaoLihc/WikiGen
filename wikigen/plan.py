@@ -4,32 +4,34 @@ import re
 
 from .agent import ask_checked
 
-MAX_SECTION_PAGES = 8  # one writer agent handles one first-level section, so sections must stay small
+MAX_SECTION_PAGES = 15  # one writer agent writes a whole first-level section, so a section cannot be huge
 TOP_FILE_SHARE = 0.1   # the most important 10% of code files should each belong to some page
 
-SYSTEM = """You plan the table of contents for a wiki that documents a codebase, for engineers new to it and \
-for coding agents.
+SYSTEM = """You plan the table of contents for a wiki that documents a codebase.
 
-First understand the repository:
-- What it is for and who uses it: README, docs, package manifests.
-- Its main parts and how they connect: clusters.md groups files that reference each other or change together, \
-links.tsv lists the strongest connections between files. Find the entry points.
-- How it is used and developed: examples, command-line tools, tests, build and CI.
-Trust code over docs, and read enough of each part's key files to know what it really does.
+Explore the repository until you understand what it does and how it is built: README and docs, entry points, \
+top-level folders, and the graph files below.
 
-Then plan:
-- Each first-level section answers one question a reader arrives with, and every page in it belongs to that \
-question. A page that fits no section needs a section of its own, not the nearest one.
-- Order sections from what a newcomer needs first to what they need last.
-- Give a topic sub-pages when it has distinct mechanisms. Use a third level only where a sub-page is still too broad.
-- Titles are short, plain phrases in the project's own vocabulary, not file or module names.
-- Cover every important part of the code. Clusters show what exists and what belongs together; they are not the outline.
+Organize the wiki around the system's conceptual architecture, not its
+directory structure.
 
-Answer with:
-- A tree at most 3 levels deep, with at most 8 pages per first-level section including the section's own page.
-- For every page: a kebab-case id, a title, a one-sentence scope (what it covers, what it leaves to other pages), \
-its parent id ("" for first level), and the files a writer should start from.
-- No Overview or Glossary; they are added automatically."""
+The top-level sections should represent the major areas a developer needs
+to understand the system:
+- Overview: the system's purpose, high-level architecture, and core concepts.
+- Major subsystems: the primary components, layers, or capabilities that
+  have distinct responsibilities within the architecture.
+- Cross-cutting concerns: important mechanisms spanning multiple subsystems,
+  such as security, configuration, persistence, or communication.
+- Development: setup, building, testing, deployment, and contribution workflows.
+
+Within each section, create sub-pages for its important components, mechanisms,
+and workflows. Add another level when a subtopic is still broad.
+
+Order sections to build understanding: orientation first, then core
+architecture and subsystems, followed by supporting concerns and development.
+
+Answer as JSON. For every page: a kebab-case id, a title, a one-sentence scope, its parent id ("" for a section), \
+and the files a writer should start from. Do not add an Overview or a Glossary; they are added automatically."""
 
 TOC_SCHEMA = {"type": "object", "required": ["pages"], "additionalProperties": False, "properties": {
     "pages": {"type": "array", "items": {
