@@ -1,0 +1,808 @@
+{
+ "shaped": true,
+ "source": {
+  "url": "https://github.com/cocoindex-io/cocoindex",
+  "commit": "f7078f01c3eb1749a22c3c01d9799f42e00ed36d"
+ },
+ "pages": [
+  {
+   "id": "overview",
+   "title": "Overview",
+   "parent": "",
+   "files": [],
+   "scope": "What the project is, its main parts and how they fit, and where to read next."
+  },
+  {
+   "id": "system-architecture",
+   "title": "System Architecture",
+   "scope": "Explain how declarative pipelines, the shared incremental engine, persistence, connectors, and the Python and Rust interfaces fit together. Direct readers to detailed subsystem pages.",
+   "parent": "",
+   "files": [
+    "README.md",
+    "docs/src/content/docs/programming_guide/core_concepts.mdx",
+    "Cargo.toml",
+    "rust/core/src/engine/mod.rs",
+    "python/cocoindex/__init__.py",
+    "rust/sdk/cocoindex/src/lib.rs"
+   ]
+  },
+  {
+   "id": "declarative-processing-model",
+   "title": "Declarative Processing Model",
+   "scope": "Trace a source-to-target pipeline through an app, processing components, stable paths, memoized functions, and declared target states; explain how these concepts enable incremental updates and cleanup.",
+   "parent": "system-architecture",
+   "files": [
+    "docs/src/content/docs/programming_guide/core_concepts.mdx",
+    "examples/files_transform/main.py",
+    "examples/text_embedding/main.py",
+    "python/cocoindex/_internal/api.py",
+    "python/cocoindex/_internal/component_ctx.py",
+    "python/cocoindex/_internal/target_state.py"
+   ]
+  },
+  {
+   "id": "shared-engine-and-language-boundaries",
+   "title": "Shared Engine and Language Boundaries",
+   "scope": "Explain EngineProfile and trace how the Python extension and native Rust SDK adapt host contexts, processors, persisted values, target handlers, and action sinks to the shared engine.",
+   "parent": "system-architecture",
+   "files": [
+    "rust/core/src/engine/profile.rs",
+    "rust/core/src/engine/component.rs",
+    "rust/core/src/engine/target_state.rs",
+    "rust/py/src/lib.rs",
+    "rust/py/src/profile.rs",
+    "rust/py/src/component.rs",
+    "rust/py/src/target_state.rs",
+    "rust/py/src/value.rs",
+    "rust/sdk/cocoindex/src/profile.rs",
+    "python/cocoindex/_internal/core.pyi"
+   ]
+  },
+  {
+   "id": "native-rust-sdk",
+   "title": "Native Rust SDK",
+   "scope": "Explain the Rust SDK's public API, Ctx-based pipeline programming, procedural macros, feature gates, and direct integration with the core engine.",
+   "parent": "system-architecture",
+   "files": [
+    "rust/sdk/cocoindex/src/lib.rs",
+    "rust/sdk/cocoindex/src/prelude.rs",
+    "rust/sdk/cocoindex/src/ctx.rs",
+    "rust/sdk/cocoindex/src/app.rs",
+    "rust/sdk/cocoindex/src/mount.rs",
+    "rust/sdk/cocoindex_macros/src/lib.rs",
+    "rust/sdk/cocoindex/Cargo.toml",
+    "docs/src/content/docs/getting_started/rust_quickstart.mdx"
+   ]
+  },
+  {
+   "id": "incremental-execution",
+   "title": "Incremental Execution",
+   "scope": "Trace an app update through root and child component execution, prior-state reuse, and live processing; link to the detailed mechanisms.",
+   "parent": "",
+   "files": [
+    "rust/core/src/engine/app.rs",
+    "rust/core/src/engine/component.rs",
+    "rust/core/src/engine/execution.rs",
+    "python/cocoindex/_internal/api.py"
+   ]
+  },
+  {
+   "id": "app-execution-and-cli",
+   "title": "App Execution and CLI",
+   "scope": "Cover app construction and loading, update options, previews, drops, and operation handles across Python, CLI, and Rust.",
+   "parent": "incremental-execution",
+   "files": [
+    "python/cocoindex/_internal/app.py",
+    "python/cocoindex/cli.py",
+    "python/cocoindex/user_app_loader.py",
+    "rust/py/src/app.rs",
+    "rust/core/src/engine/app.rs",
+    "rust/sdk/cocoindex/src/app.rs"
+   ]
+  },
+  {
+   "id": "component-mounting-and-identity",
+   "title": "Component Mounting and Identity",
+   "scope": "Explain foreground and background mounts, readiness, keyed fan-out, and stable paths that identify child components.",
+   "parent": "incremental-execution",
+   "files": [
+    "python/cocoindex/_internal/api.py",
+    "python/cocoindex/_internal/component_ctx.py",
+    "python/cocoindex/_internal/stable_path.py",
+    "rust/py/src/component.rs",
+    "rust/core/src/engine/component.rs",
+    "rust/core/src/state/stable_path.rs",
+    "rust/sdk/cocoindex/src/mount.rs"
+   ]
+  },
+  {
+   "id": "processing-functions",
+   "title": "Processing Functions",
+   "scope": "Explain decorated Python functions, sync and async execution, bound methods, and processor adapters, with the corresponding Rust function interface.",
+   "parent": "incremental-execution",
+   "files": [
+    "python/cocoindex/_internal/function.py",
+    "rust/py/src/function.rs",
+    "rust/core/src/engine/function.rs",
+    "rust/sdk/cocoindex_macros/src/lib.rs",
+    "docs/src/content/docs/programming_guide/function.mdx"
+   ]
+  },
+  {
+   "id": "memoization-and-state-reuse",
+   "title": "Memoization and State Reuse",
+   "scope": "Explain component and function memoization, input keys, tracked state validation, dependency reuse, and restoration of cached declarations.",
+   "parent": "incremental-execution",
+   "files": [
+    "python/cocoindex/_internal/memo_fingerprint.py",
+    "python/cocoindex/_internal/function.py",
+    "rust/core/src/engine/component.rs",
+    "rust/core/src/engine/function.rs",
+    "rust/core/src/engine/execution.rs",
+    "rust/sdk/cocoindex/src/memo.rs",
+    "python/tests/core/test_memo_state_validation.py"
+   ]
+  },
+  {
+   "id": "logic-change-detection",
+   "title": "Logic Change Detection",
+   "scope": "Explain logic fingerprints, versions and declared dependencies, registry validation, and propagation of changes to callers.",
+   "parent": "memoization-and-state-reuse",
+   "files": [
+    "python/cocoindex/_internal/function.py",
+    "python/cocoindex/_internal/logic_propagated_to_callers.py",
+    "rust/core/src/engine/logic_registry.rs",
+    "rust/sdk/cocoindex/src/logic.rs",
+    "python/tests/core/test_logic_change_detection.py"
+   ]
+  },
+  {
+   "id": "live-component-lifecycle",
+   "title": "Live Component Lifecycle",
+   "scope": "Describe catch-up and live modes, readiness, keyed and full updates, periodic refresh, cancellation, and shutdown.",
+   "parent": "incremental-execution",
+   "files": [
+    "python/cocoindex/_internal/live_component.py",
+    "rust/core/src/engine/live_component.rs",
+    "rust/sdk/cocoindex/src/live_component.rs",
+    "docs/src/content/docs/programming_guide/live_mode.mdx",
+    "python/tests/core/test_auto_refresh.py"
+   ]
+  },
+  {
+   "id": "live-maps-and-change-feeds",
+   "title": "Live Maps and Change Feeds",
+   "scope": "Explain feed and view interfaces, snapshot and subscription ordering, keyed change delivery, and in-memory LiveMap ownership and watch behavior.",
+   "parent": "incremental-execution",
+   "files": [
+    "python/cocoindex/resources/live_map.py",
+    "python/cocoindex/_internal/live_component.py",
+    "python/cocoindex/connectorkits/async_adapters.py",
+    "rust/sdk/cocoindex/src/resources/live_map.rs",
+    "rust/sdk/cocoindex/src/live_component.rs",
+    "python/tests/resources/test_live_map.py"
+   ]
+  },
+  {
+   "id": "target-reconciliation",
+   "title": "Target Reconciliation",
+   "scope": "Explain how component declarations become reconciled external actions, tracking records, and committed ownership; connect the stages and their failure boundaries.",
+   "parent": "",
+   "files": [
+    "rust/core/src/engine/target_state.rs",
+    "rust/core/src/engine/execution.rs",
+    "rust/core/src/state_store/submit_session.rs",
+    "python/cocoindex/_internal/target_state.py",
+    "docs/src/content/docs/programming_guide/target_state.mdx"
+   ]
+  },
+  {
+   "id": "target-declarations-and-hierarchies",
+   "title": "Target Declarations and Hierarchies",
+   "scope": "Explain root providers, stable keyed target states, child providers, attachments, provider generations, and child invalidation.",
+   "parent": "target-reconciliation",
+   "files": [
+    "python/cocoindex/_internal/target_state.py",
+    "rust/core/src/engine/target_state.rs",
+    "rust/core/src/engine/execution.rs",
+    "rust/core/src/state/target_state_path.rs",
+    "rust/sdk/cocoindex/src/target_state.rs",
+    "python/tests/core/test_attachment_target_states.py"
+   ]
+  },
+  {
+   "id": "ownership-submission-and-cleanup",
+   "title": "Ownership, Submission, and Cleanup",
+   "scope": "Trace precommit reads and claims, action application, commit ordering, ownership transfer, tombstones, and cleanup of disappeared components and declarations.",
+   "parent": "target-reconciliation",
+   "files": [
+    "rust/core/src/engine/execution.rs",
+    "rust/core/src/state_store/submit_session.rs",
+    "rust/core/src/state_store/app_store.rs",
+    "rust/core/src/state/db_schema.rs",
+    "python/tests/core/test_ownership_transfer.py",
+    "rust/core/tests/target_owner_cleanup.rs"
+   ]
+  },
+  {
+   "id": "custom-target-handlers-and-sinks",
+   "title": "Custom Target Handlers and Sinks",
+   "scope": "Explain the handler and sink contracts, tracking records, child handler factories, retry-safe reconciliation, idempotent actions, shared batching, and failure isolation.",
+   "parent": "target-reconciliation",
+   "files": [
+    "docs/src/content/docs/advanced_topics/custom_target_connector.mdx",
+    "python/cocoindex/_internal/target_state.py",
+    "rust/core/src/engine/target_state.rs",
+    "python/cocoindex/connectors/localfs/_target.py",
+    "python/tests/core/test_target_sink_failure_isolation.py"
+   ]
+  },
+  {
+   "id": "state-diffs-and-schema-evolution",
+   "title": "State Diffs and Schema Evolution",
+   "scope": "Explain tracking record transitions, managed ownership policies, composite diffs, schema comparisons, and how destructive or lossy transitions affect child state.",
+   "parent": "target-reconciliation",
+   "files": [
+    "python/cocoindex/connectorkits/statediff.py",
+    "python/cocoindex/connectorkits/target.py",
+    "python/cocoindex/resources/schema.py",
+    "rust/sdk/cocoindex/src/statediff.rs",
+    "rust/sdk/cocoindex/src/row_schema.rs",
+    "rust/core/src/engine/execution.rs"
+   ]
+  },
+  {
+   "id": "source-and-target-connectors",
+   "title": "Source and Target Connectors",
+   "scope": "Map built-in integrations by source and target roles, supported live feeds, language availability, and shared connector helpers.",
+   "parent": "",
+   "files": [
+    "docs/src/content/docs/connectors/index.mdx",
+    "python/cocoindex/connectorkits/__init__.py",
+    "rust/sdk/cocoindex/src/connectors/mod.rs"
+   ]
+  },
+  {
+   "id": "filesystem-and-file-resources",
+   "title": "Filesystem and File Resources",
+   "scope": "Explain file paths, metadata and content fingerprints, path matching, directory traversal, live watching, and filesystem target reconciliation in Python and Rust.",
+   "parent": "source-and-target-connectors",
+   "files": [
+    "python/cocoindex/resources/file.py",
+    "python/cocoindex/connectors/localfs/_source.py",
+    "python/cocoindex/connectors/localfs/_target.py",
+    "python/cocoindex/connectors/localfs/_common.py",
+    "rust/sdk/cocoindex/src/resources/file.rs",
+    "rust/sdk/cocoindex/src/resources/fs.rs"
+   ]
+  },
+  {
+   "id": "cloud-file-sources",
+   "title": "Cloud File Sources",
+   "scope": "Compare object storage and Google Drive enumeration, file identity, metadata and content access, including OCI's optional event-driven live view.",
+   "parent": "source-and-target-connectors",
+   "files": [
+    "python/cocoindex/connectors/amazon_s3/_source.py",
+    "python/cocoindex/connectors/azure_blob/_source.py",
+    "python/cocoindex/connectors/oci_object_storage/_source.py",
+    "python/cocoindex/connectors/google_drive/_source.py",
+    "rust/sdk/cocoindex/src/connectors/amazon_s3.rs",
+    "rust/sdk/cocoindex/src/connectors/oci_object_storage.rs",
+    "rust/sdk/cocoindex/src/connectors/gdrive.rs",
+    "examples/gdrive_text_embedding/main.py"
+   ]
+  },
+  {
+   "id": "relational-database-connectors",
+   "title": "Relational Database Connectors",
+   "scope": "Compare PostgreSQL, SQLite and Doris source and target capabilities, table schemas, row synchronization and indexes; link to connector-specific details.",
+   "parent": "source-and-target-connectors",
+   "files": [
+    "python/cocoindex/connectors/postgres/_source.py",
+    "python/cocoindex/connectors/postgres/_target.py",
+    "python/cocoindex/connectors/sqlite/_target.py",
+    "python/cocoindex/connectors/doris/_target.py",
+    "rust/sdk/cocoindex/src/connectors/postgres.rs",
+    "rust/sdk/cocoindex/src/connectors/sqlite.rs",
+    "rust/sdk/cocoindex/src/connectors/doris.rs"
+   ]
+  },
+  {
+   "id": "source-and-target-connectors-postgres",
+   "title": "PostgreSQL Source and Target",
+   "scope": "Trace repeatable-read source enumeration and keyed rows, then PostgreSQL table, row and index reconciliation in the Python and Rust connectors.",
+   "parent": "relational-database-connectors",
+   "files": [
+    "python/cocoindex/connectors/postgres/_source.py",
+    "python/cocoindex/connectors/postgres/_target.py",
+    "rust/sdk/cocoindex/src/connectors/postgres.rs",
+    "examples/postgres_source/main.py",
+    "python/tests/connectors/test_postgres_source.py",
+    "python/tests/connectors/test_postgres_target.py"
+   ]
+  },
+  {
+   "id": "source-and-target-connectors-sqlite-and-doris",
+   "title": "SQLite and Doris Targets",
+   "scope": "Explain table and row synchronization, schema changes, and vector and other index management in SQLite and Doris.",
+   "parent": "relational-database-connectors",
+   "files": [
+    "python/cocoindex/connectors/sqlite/_target.py",
+    "python/cocoindex/connectors/doris/_target.py",
+    "rust/sdk/cocoindex/src/connectors/sqlite.rs",
+    "rust/sdk/cocoindex/src/connectors/doris.rs",
+    "python/tests/connectors/test_sqlite_target.py",
+    "python/tests/connectors/test_doris_target.py"
+   ]
+  },
+  {
+   "id": "warehouse-connectors",
+   "title": "Warehouse Connectors",
+   "scope": "Compare BigQuery and Snowflake table schema reconciliation, value encoding, row upserts and deletes.",
+   "parent": "source-and-target-connectors",
+   "files": [
+    "python/cocoindex/connectors/bigquery/_target.py",
+    "python/cocoindex/connectors/snowflake/_target.py",
+    "examples/bigquery_target/main.py",
+    "examples/snowflake_target/main.py"
+   ]
+  },
+  {
+   "id": "vector-and-key-value-targets",
+   "title": "Vector and Key-Value Targets",
+   "scope": "Compare target containers, vector schemas, indexes and record models across LanceDB, zvec, Qdrant, Turbopuffer and Valkey; direct readers to implementation details.",
+   "parent": "source-and-target-connectors",
+   "files": [
+    "python/cocoindex/connectors/lancedb/_target.py",
+    "python/cocoindex/connectors/qdrant/_target.py",
+    "python/cocoindex/connectors/turbopuffer/_target.py",
+    "python/cocoindex/connectors/zvec/_target.py",
+    "python/cocoindex/connectors/valkey/_target.py",
+    "rust/sdk/cocoindex/src/connectors/lancedb.rs",
+    "rust/sdk/cocoindex/src/connectors/qdrant.rs",
+    "rust/sdk/cocoindex/src/connectors/turbopuffer.rs",
+    "rust/sdk/cocoindex/src/connectors/valkey.rs"
+   ]
+  },
+  {
+   "id": "source-and-target-connectors-lancedb-and-zvec",
+   "title": "LanceDB and zvec Targets",
+   "scope": "Explain embedded table and collection schemas, vector and full-text indexes, and row or document synchronization.",
+   "parent": "vector-and-key-value-targets",
+   "files": [
+    "python/cocoindex/connectors/lancedb/_target.py",
+    "python/cocoindex/connectors/zvec/_target.py",
+    "rust/sdk/cocoindex/src/connectors/lancedb.rs",
+    "examples/text_embedding_lancedb/main.py"
+   ]
+  },
+  {
+   "id": "source-and-target-connectors-qdrant-turbopuffer-and-valkey",
+   "title": "Qdrant, Turbopuffer and Valkey Targets",
+   "scope": "Explain collection, namespace and index management, vector definitions, and point, row and document synchronization.",
+   "parent": "vector-and-key-value-targets",
+   "files": [
+    "python/cocoindex/connectors/qdrant/_target.py",
+    "python/cocoindex/connectors/turbopuffer/_target.py",
+    "python/cocoindex/connectors/valkey/_target.py",
+    "rust/sdk/cocoindex/src/connectors/qdrant.rs",
+    "rust/sdk/cocoindex/src/connectors/turbopuffer.rs",
+    "rust/sdk/cocoindex/src/connectors/valkey.rs",
+    "examples/text_embedding_qdrant/main.py"
+   ]
+  },
+  {
+   "id": "graph-database-targets",
+   "title": "Graph Database Targets",
+   "scope": "Compare graph connections, table and relation targets, record ownership and vector indexes across Neo4j, FalkorDB and SurrealDB.",
+   "parent": "source-and-target-connectors",
+   "files": [
+    "python/cocoindex/connectors/neo4j/_target.py",
+    "python/cocoindex/connectors/falkordb/_target.py",
+    "python/cocoindex/connectors/surrealdb/_target.py",
+    "rust/sdk/cocoindex/src/cypher_graph.rs",
+    "rust/sdk/cocoindex/src/connectors/surrealdb.rs"
+   ]
+  },
+  {
+   "id": "source-and-target-connectors-cypher-graph-targets",
+   "title": "Neo4j and FalkorDB Targets",
+   "scope": "Explain node and relationship declarations, Cypher action ordering, schema and vector index management, including the Rust SDK's shared Cypher graph implementation.",
+   "parent": "graph-database-targets",
+   "files": [
+    "python/cocoindex/connectors/neo4j/_target.py",
+    "python/cocoindex/connectors/neo4j/_cypher.py",
+    "python/cocoindex/connectors/falkordb/_target.py",
+    "python/cocoindex/connectors/falkordb/_cypher.py",
+    "rust/sdk/cocoindex/src/cypher_graph.rs",
+    "rust/sdk/cocoindex/src/connectors/neo4j.rs",
+    "rust/sdk/cocoindex/src/connectors/falkordb.rs"
+   ]
+  },
+  {
+   "id": "source-and-target-connectors-surrealdb",
+   "title": "SurrealDB Target",
+   "scope": "Explain record and relation targets, field ownership, table schema, action ordering and vector indexes.",
+   "parent": "graph-database-targets",
+   "files": [
+    "python/cocoindex/connectors/surrealdb/_target.py",
+    "rust/sdk/cocoindex/src/connectors/surrealdb.rs",
+    "python/tests/connectors/test_surrealdb_target.py"
+   ]
+  },
+  {
+   "id": "streaming-connectors",
+   "title": "Streaming Connectors",
+   "scope": "Explain Kafka and Iggy streams and keyed maps, catch-up boundaries, ordered offset acknowledgment, single-watcher behavior and message targets.",
+   "parent": "source-and-target-connectors",
+   "files": [
+    "python/cocoindex/connectors/kafka/_source.py",
+    "python/cocoindex/connectors/kafka/_target.py",
+    "python/cocoindex/connectors/iggy/_source.py",
+    "python/cocoindex/connectors/iggy/_target.py",
+    "rust/sdk/cocoindex/src/connectors/kafka.rs",
+    "rust/sdk/cocoindex/src/connectors/iggy.rs",
+    "python/cocoindex/connectorkits/__init__.py"
+   ]
+  },
+  {
+   "id": "transformation-and-intelligence",
+   "title": "Transformation and Intelligence",
+   "scope": "Overview of composable operations for splitting, code analysis, embeddings, model calls, and entity resolution in Python and Rust.",
+   "parent": "",
+   "files": [
+    "docs/src/content/docs/ops/index.mdx",
+    "python/cocoindex/ops/__init__.py",
+    "rust/sdk/cocoindex/src/ops/mod.rs"
+   ]
+  },
+  {
+   "id": "text-splitting-and-provenance",
+   "title": "Text Splitting and Provenance",
+   "scope": "Explain separator and recursive splitting, language-aware boundaries, overlap, fallback behavior, and position-tracked chunks.",
+   "parent": "transformation-and-intelligence",
+   "files": [
+    "python/cocoindex/ops/text.py",
+    "python/cocoindex/resources/chunk.py",
+    "rust/sdk/cocoindex/src/ops/text.rs",
+    "rust/ops_text/src/split/recursive.rs",
+    "rust/ops_text/src/split/by_separators.rs",
+    "rust/code_ast/src/positions.rs"
+   ]
+  },
+  {
+   "id": "code-parsing-and-context-views",
+   "title": "Code Parsing and Context Views",
+   "scope": "Explain reusable parsed sources, language registration, semantic elements, syntax-aware splitting, and source-grounded context views.",
+   "parent": "transformation-and-intelligence",
+   "files": [
+    "python/cocoindex/ops/code.py",
+    "python/cocoindex/resources/view.py",
+    "rust/sdk/cocoindex/src/ops/code.rs",
+    "rust/code_ast/src/source.rs",
+    "rust/code_ast/src/prog_langs.rs",
+    "rust/code_ast/src/elements/config.rs",
+    "rust/code_ast/src/view/mod.rs",
+    "rust/code_ast/src/view/lang.rs",
+    "rust/code_ast/src/view/render.rs",
+    "examples/code_embedding/main.py"
+   ]
+  },
+  {
+   "id": "structural-matching-and-prefilters",
+   "title": "Structural Matching and Prefilters",
+   "scope": "Explain pattern compilation, metavariables and captures, language-specific matching, prefilters, and index terms.",
+   "parent": "code-parsing-and-context-views",
+   "files": [
+    "rust/code_match/README.md",
+    "rust/code_match/src/lib.rs",
+    "rust/code_match/src/config.rs",
+    "rust/code_match/src/lexer.rs",
+    "rust/code_match/src/matcher.rs",
+    "rust/code_match/src/prefilter.rs",
+    "python/cocoindex/ops/code.py",
+    "python/tests/ops/test_code.py"
+   ]
+  },
+  {
+   "id": "embedding-models-and-vector-types",
+   "title": "Embedding Models and Vector Types",
+   "scope": "Explain embedder interfaces, local text and image embedding, vector schema metadata, and embedding workflows.",
+   "parent": "transformation-and-intelligence",
+   "files": [
+    "python/cocoindex/resources/embedder.py",
+    "python/cocoindex/resources/schema.py",
+    "python/cocoindex/ops/sentence_transformers.py",
+    "rust/sdk/cocoindex/src/resources/schema.rs",
+    "rust/sdk/cocoindex/src/ops/sentence_transformers.rs",
+    "rust/sdk/cocoindex/src/ops/image.rs",
+    "examples/image_search/pipeline.py"
+   ]
+  },
+  {
+   "id": "model-calls-and-multimodal-processing",
+   "title": "Model Calls and Multimodal Processing",
+   "scope": "Describe LiteLLM and Rust HTTP integrations for hosted embeddings, transcription, and JSON chat, alongside model-call and image-processing examples.",
+   "parent": "transformation-and-intelligence",
+   "files": [
+    "python/cocoindex/ops/litellm.py",
+    "rust/sdk/cocoindex/src/ops/api.rs",
+    "examples/audio_to_text/main.py",
+    "examples/paper_metadata/main.py",
+    "examples/image_search/pipeline.py",
+    "python/tests/ops/test_litellm_retry_delegation.py"
+   ]
+  },
+  {
+   "id": "entity-resolution",
+   "title": "Entity Resolution",
+   "scope": "Explain embedding-based candidate selection, pair resolvers, canonical policies, component partitioning, and resolution events in Python and Rust.",
+   "parent": "transformation-and-intelligence",
+   "files": [
+    "python/cocoindex/ops/entity_resolution/__init__.py",
+    "python/cocoindex/ops/entity_resolution/llm_resolver.py",
+    "rust/sdk/cocoindex/src/entity_resolution.rs",
+    "rust/sdk/cocoindex/src/ops/api.rs",
+    "python/tests/ops/test_entity_resolution.py",
+    "rust/sdk/cocoindex/tests/entity_resolution.rs"
+   ]
+  },
+  {
+   "id": "runtime-and-shared-mechanisms",
+   "title": "Runtime and Shared Mechanisms",
+   "scope": "Orient readers to environments, shared execution resources, persistent state, and operational visibility across the Python and Rust APIs.",
+   "parent": "",
+   "files": [
+    "rust/core/src/engine/environment.rs",
+    "rust/core/src/engine/runtime.rs",
+    "python/cocoindex/_internal/environment.py",
+    "rust/sdk/cocoindex/src/app.rs"
+   ]
+  },
+  {
+   "id": "context-resources-and-identity",
+   "title": "Context, Resources, and Identity",
+   "scope": "Explain typed context providers, tracked resource dependencies, component context propagation, and thread attachment. Introduce stable ID generation and link to its detailed page.",
+   "parent": "runtime-and-shared-mechanisms",
+   "files": [
+    "python/cocoindex/_internal/context_keys.py",
+    "python/cocoindex/_internal/component_ctx.py",
+    "rust/py/src/context.rs",
+    "rust/core/src/engine/context.rs",
+    "rust/sdk/cocoindex/src/ctx.rs"
+   ]
+  },
+  {
+   "id": "runtime-and-shared-mechanisms-stable-id-generation",
+   "title": "Stable ID Generation",
+   "scope": "Explain memoized IDs and UUIDs, generators for repeated dependencies, occurrence ordinals, and batched allocation by the core ID sequencer.",
+   "parent": "context-resources-and-identity",
+   "files": [
+    "python/cocoindex/resources/id.py",
+    "rust/sdk/cocoindex/src/resources/id.rs",
+    "rust/core/src/engine/id_sequencer.rs",
+    "python/tests/resources/test_id.py"
+   ]
+  },
+  {
+   "id": "environment-configuration-and-lifecycle",
+   "title": "Environment Configuration and Lifecycle",
+   "scope": "Explain settings and environment variables, lifespan-managed resources, default and explicit environments, event loops, runtime startup, and shutdown.",
+   "parent": "runtime-and-shared-mechanisms",
+   "files": [
+    "python/cocoindex/_internal/setting.py",
+    "python/cocoindex/_internal/environment.py",
+    "rust/core/src/engine/environment.rs",
+    "rust/core/src/engine/runtime.rs",
+    "rust/py/src/runtime.rs",
+    "docs/src/content/docs/advanced_topics/multiple_environments.mdx"
+   ]
+  },
+  {
+   "id": "persistent-state-and-user-state",
+   "title": "Persistent State and User State",
+   "scope": "Describe LMDB app stores, persisted component and target records, memo values, and explicit user state; link to transaction internals.",
+   "parent": "runtime-and-shared-mechanisms",
+   "files": [
+    "rust/core/src/state/db_schema.rs",
+    "rust/core/src/state_store/app_store.rs",
+    "rust/core/src/state_store/storage.rs",
+    "rust/sdk/cocoindex/src/user_state.rs",
+    "python/tests/core/test_use_state.py"
+   ]
+  },
+  {
+   "id": "lmdb-transactions-and-write-batching",
+   "title": "LMDB Transactions and Write Batching",
+   "scope": "Explain the single-writer batcher, retryable transaction bodies, thread affinity, map resizing, and submission commit plans.",
+   "parent": "persistent-state-and-user-state",
+   "files": [
+    "rust/core/src/state_store/storage.rs",
+    "rust/core/src/state_store/txn.rs",
+    "rust/core/src/state_store/submit_session.rs",
+    "benchmarks/state_store/README.md"
+   ]
+  },
+  {
+   "id": "types-serialization-and-fingerprints",
+   "title": "Types, Serialization, and Fingerprints",
+   "scope": "Explain Python type interpretation, durable serialization and restricted unpickling, the separate compact in-memory target-state codec, and fingerprints used for change detection.",
+   "parent": "runtime-and-shared-mechanisms",
+   "files": [
+    "python/cocoindex/_internal/typing.py",
+    "python/cocoindex/_internal/datatype.py",
+    "python/cocoindex/_internal/serde.py",
+    "python/cocoindex/_internal/target_state_codec.py",
+    "python/cocoindex/_internal/memo_fingerprint.py",
+    "rust/utils/src/fingerprint.rs",
+    "python/tests/core/test_safe_unpickle.py"
+   ]
+  },
+  {
+   "id": "concurrency-batching-and-rate-limits",
+   "title": "Concurrency, Batching, and Rate Limits",
+   "scope": "Explain component admission and token lending, shared batch queues, function and sink batching, and rate limiting. Introduce execution runners and link to their detailed page.",
+   "parent": "runtime-and-shared-mechanisms",
+   "files": [
+    "rust/core/src/engine/admission.rs",
+    "rust/utils/src/batching.rs",
+    "rust/utils/src/concur_control.rs",
+    "rust/utils/src/ratelimit.rs",
+    "python/cocoindex/_internal/batching.py",
+    "python/cocoindex/resources/rate_limit.py"
+   ]
+  },
+  {
+   "id": "runtime-and-shared-mechanisms-execution-runners-and-gpu-pools",
+   "title": "Execution Runners and GPU Pools",
+   "scope": "Explain Python execution runners, subprocess execution, GPU allocation and fractions, and the shared GPU pool.",
+   "parent": "concurrency-batching-and-rate-limits",
+   "files": [
+    "python/cocoindex/_internal/runner.py",
+    "rust/utils/src/gpu_pool.rs",
+    "python/tests/core/test_gpu_pool.py"
+   ]
+  },
+  {
+   "id": "deadlines-cancellation-and-failures",
+   "title": "Deadlines, Cancellation, and Failures",
+   "scope": "Explain deadline propagation, cancellation checks, exception handler chains, transient retry classification, and failure isolation.",
+   "parent": "runtime-and-shared-mechanisms",
+   "files": [
+    "rust/core/src/engine/deadline.rs",
+    "python/cocoindex/_internal/deadline.py",
+    "python/cocoindex/_internal/component_ctx.py",
+    "rust/utils/src/retryable.rs",
+    "python/tests/core/test_cancellation.py",
+    "python/tests/core/test_exception_handlers.py"
+   ]
+  },
+  {
+   "id": "inspection-progress-and-telemetry",
+   "title": "Inspection, Progress, and Telemetry",
+   "scope": "Describe persisted-state inspection, progress and statistics handles, terminal reporting, and telemetry controls.",
+   "parent": "runtime-and-shared-mechanisms",
+   "files": [
+    "python/cocoindex/inspect.py",
+    "python/cocoindex/_internal/inspect_api.py",
+    "python/cocoindex/_internal/update_stats.py",
+    "rust/core/src/inspect/db_inspect.rs",
+    "rust/core/src/engine/stats.rs",
+    "rust/core/src/engine/progress_display.rs",
+    "rust/core/src/telemetry/mod.rs"
+   ]
+  },
+  {
+   "id": "development",
+   "title": "Development",
+   "scope": "Orient contributors to the repository's build, validation, examples, documentation and release workflows.",
+   "parent": "",
+   "files": [
+    "AGENTS.md",
+    "docs/src/content/docs/contributing/guide.mdx",
+    "pyproject.toml",
+    "Cargo.toml"
+   ]
+  },
+  {
+   "id": "local-setup-and-builds",
+   "title": "Local Setup and Builds",
+   "scope": "Set up Rust, uv and prek; build and rebuild the Python extension; select optional dependencies; and run examples against a local checkout.",
+   "parent": "development",
+   "files": [
+    "docs/src/content/docs/contributing/setup_dev_environment.mdx",
+    "pyproject.toml",
+    "Cargo.toml",
+    "rust/py/Cargo.toml",
+    "dev/run_maturin_develop.sh",
+    ".env.lib_debug"
+   ]
+  },
+  {
+   "id": "testing-and-performance",
+   "title": "Testing and Performance",
+   "scope": "Explain test environments, Docker-backed fixtures, CI test matrices, Rust SDK feature checks and benchmark workflows.",
+   "parent": "development",
+   "files": [
+    "python/tests/conftest.py",
+    "python/tests/common/environment.py",
+    "dev/run_cargo_test.sh",
+    "dev/run_cargo_test_sdk_features.sh",
+    "dev/run_cargo_test_rust_externs.sh",
+    ".github/workflows/_test.yml",
+    "benchmarks/file_summarization/README.md",
+    "benchmarks/entity_resolution/README.md",
+    "benchmarks/state_store/README.md"
+   ]
+  },
+  {
+   "id": "contribution-and-quality-checks",
+   "title": "Contribution and Quality Checks",
+   "scope": "Cover contributor conventions, prek hooks, formatting, linting, generated artifacts and checks for core and SDK changes.",
+   "parent": "development",
+   "files": [
+    "AGENTS.md",
+    "docs/src/content/docs/contributing/guide.mdx",
+    "dev/rust-guidelines.md",
+    ".pre-commit-config.yaml",
+    "dev/run_cargo_clippy.sh",
+    "dev/check_sdk_no_pyo3.sh",
+    "dev/update_rust_extern_locks.sh"
+   ]
+  },
+  {
+   "id": "example-application-patterns",
+   "title": "Example Application Patterns",
+   "scope": "Connect runnable Python and Rust examples to retrieval, document processing, knowledge graphs and streaming pipelines.",
+   "parent": "development",
+   "files": [
+    "examples/text_embedding/main.py",
+    "examples/pdf_embedding/main.py",
+    "examples/conversation_to_knowledge/conv_knowledge/app.py",
+    "examples/kafka_to_lancedb/main.py",
+    "examples/rust/text_embedding/src/main.rs"
+   ]
+  },
+  {
+   "id": "packaging-releases-and-running-apps",
+   "title": "Packaging and Releases",
+   "scope": "Explain version synchronization, wheel and source distribution builds, release validation and publishing; link to runtime configuration and CLI pages for operating apps.",
+   "parent": "development",
+   "files": [
+    ".github/workflows/release.yml",
+    ".github/scripts/update_version.py",
+    "pyproject.toml",
+    "Cargo.toml",
+    "rust/py/Cargo.toml",
+    "python/cocoindex/_version_check.py"
+   ]
+  },
+  {
+   "id": "documentation-site-and-agent-exports",
+   "title": "Documentation Site and Agent Exports",
+   "scope": "Describe the Astro build, sidebar navigation, inline diagram components, generated CLI reference and machine-readable documentation routes.",
+   "parent": "development",
+   "files": [
+    "docs/astro.config.mjs",
+    "docs/package.json",
+    "docs/src/data/docs-sidebar.ts",
+    "docs/src/lib/raw-markdown.ts",
+    "docs/src/pages/llms.txt.ts",
+    "docs/src/pages/llms-full.txt.ts",
+    "docs/src/pages/[...slug].md.ts",
+    "docs/src/pages/skill.md.ts",
+    "docs/src/components/diagrams/README.md",
+    "dev/generate_cli_docs.py",
+    ".github/workflows/docs_test.yml",
+    ".github/workflows/_docs_release.yml"
+   ]
+  },
+  {
+   "id": "glossary",
+   "title": "Glossary",
+   "parent": "",
+   "files": [],
+   "scope": "Project-specific terms, each with a one-line meaning and the page that explains it."
+  }
+ ]
+}

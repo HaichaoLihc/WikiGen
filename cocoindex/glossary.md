@@ -1,0 +1,156 @@
+# Glossary
+
+- **ABI3 (`abi3`)**: PyO3’s stable Python ABI feature used for standard extension builds. See [Packaging and Releases](packaging-releases-and-running-apps.md).
+- **AdmissionPool**: The app’s pool of component execution tokens. See [Concurrency, Batching, and Rate Limits](concurrency-batching-and-rate-limits.md).
+- **ApiChatClient**: Rust client that requests JSON-object chat responses from a compatible HTTP endpoint. See [Model Calls and Multimodal Processing](model-calls-and-multimodal-processing.md).
+- **App**: A named runnable pipeline associated with an environment and a root processing component. See [App Execution and CLI](app-execution-and-cli.md).
+- **`APP_TARGET`**: CLI module or file specifier that can optionally select an app and environment. See [App Execution and CLI](app-execution-and-cli.md).
+- **AppStore**: An app’s named LMDB database within an environment’s storage. See [Persistent State and User State](persistent-state-and-user-state.md).
+- **Attachment**: A named provider namespace for auxiliary target states. See [Target Declarations and Hierarchies](target-declarations-and-hierarchies.md).
+- **`auto_refresh`**: A wrapper that repeats a component’s full processing pass at a fixed delay. See [Live Component Lifecycle](live-component-lifecycle.md).
+- **BatchQueue**: A shared queue of pending batches, each associated with a batcher. See [Concurrency, Batching, and Rate Limits](concurrency-batching-and-rate-limits.md).
+- **Bound method**: A function wrapper that supplies its instance when called or mounted. See [Processing Functions](processing-functions.md).
+- **Canonical name**: The representative name reached by following an entity’s resolution chain. See [Entity Resolution](entity-resolution.md).
+- **Catch-up mode**: An app update that finishes after initial processing rather than continuing to watch for changes. See [Live Component Lifecycle](live-component-lifecycle.md).
+- **Child handler factory**: A factory that builds a container’s child target handler from its action. See [Custom Target Handlers and Sinks](custom-target-handlers-and-sinks.md).
+- **Child invalidation**: A parent handler’s signal that its action destroyed or may have damaged child state. See [State Diffs and Schema Evolution](state-diffs-and-schema-evolution.md).
+- **Chunk**: Text associated with start and end positions in its original source. See [Text Splitting and Provenance](text-splitting-and-provenance.md).
+- **`coco-dev-run`**: A helper that runs an example command with the local repository installed as an editable dependency. See [Local Setup and Builds](local-setup-and-builds.md).
+- **CodeElements**: Declarations and references represented with names, kinds, and source positions. See [Code Parsing and Context Views](code-parsing-and-context-views.md).
+- **CodePattern**: A compiled structural pattern and prefilter reusable across source inputs. See [Structural Matching and Prefilters](structural-matching-and-prefilters.md).
+- **CodeSource**: Source text with a lazily cached parse shared by code operations. See [Code Parsing and Context Views](code-parsing-and-context-views.md).
+- **`cold`, `warm`, `edit`, `shape`**: File-summarization benchmark phases covering initial, unchanged, and modified inputs. See [Testing and Performance](testing-and-performance.md).
+- **CollectionSchema**: zvec document field and vector definitions with a single primary key. See [LanceDB and zvec Targets](source-and-target-connectors-lancedb-and-zvec.md).
+- **CollectionTarget**: A Qdrant container target whose children are points. See [Qdrant, Turbopuffer and Valkey Targets](source-and-target-connectors-qdrant-turbopuffer-and-valkey.md).
+- **CommitPlan**: Final tracking, ownership, memo, and user-state changes applied by `AppStore::commit`. See [LMDB Transactions and Write Batching](lmdb-transactions-and-write-batching.md).
+- **Component path**: Stable hierarchical identity used to match a processing component across runs. See [Component Mounting and Identity](component-mounting-and-identity.md).
+- **Component subpath (`ComponentSubpath`)**: Relative path parts appended to the current component path to identify a child. See [Component Mounting and Identity](component-mounting-and-identity.md).
+- **ComponentContext**: Python’s current component execution context. See [Context, Resources, and Identity](context-resources-and-identity.md).
+- **ComponentMountHandle**: Python handle for awaiting a background component’s readiness. See [Component Mounting and Identity](component-mounting-and-identity.md).
+- **ComponentProcessor**: The shared engine interface for executing a component’s processor. See [Processing Functions](processing-functions.md).
+- **CompositeTrackingRecord**: A main tracking record and keyed sub-records compared separately. See [State Diffs and Schema Evolution](state-diffs-and-schema-evolution.md).
+- **ConnectionConfig**: Context-provided settings used to open a warehouse client or connection. See [Warehouse Connectors](warehouse-connectors.md).
+- **Container target**: A declared table, collection, namespace, or index that provides child record targets. See [Vector and Key-Value Targets](vector-and-key-value-targets.md).
+- **ContextFrame**: A source line identifying a structure enclosing a range. See [Code Parsing and Context Views](code-parsing-and-context-views.md).
+- **ContextKey**: A typed, named identifier for a provided resource. See [Context, Resources, and Identity](context-resources-and-identity.md).
+- **`CORE_VERSION`**: Rust version recorded in the Python package to check the loaded extension. See [Packaging and Releases](packaging-releases-and-running-apps.md).
+- **Ctx**: The Rust SDK context passed explicitly through pipeline execution to access resources and engine operations. See [Native Rust SDK](native-rust-sdk.md).
+- **CustomLanguageConfig**: A named, optionally aliased set of prioritized regex separators. See [Text Splitting and Provenance](text-splitting-and-provenance.md).
+- **CypherExecutor**: The Rust interface through which shared graph handlers execute dialect-specific Cypher. See [Neo4j and FalkorDB Targets](source-and-target-connectors-cypher-graph-targets.md).
+- **DataTypeInfo**: The analyzed core type, variant, annotations, and nullability of a Python annotation. See [Types, Serialization, and Fingerprints](types-serialization-and-fingerprints.md).
+- **DeadlineContext**: An immutable optional monotonic deadline checked at engine checkpoints. See [Deadlines, Cancellation, and Failures](deadlines-cancellation-and-failures.md).
+- **Dependency memo entry**: A nested memo referenced so its cached declarations remain reachable. See [Memoization and State Reuse](memoization-and-state-reuse.md).
+- **`deps`**: External values included in a Python function’s logic fingerprint. See [Logic Change Detection](logic-change-detection.md).
+- **DirTarget**: A provider for declaring filesystem output states. See [Filesystem and File Resources](filesystem-and-file-resources.md).
+- **Embedder**: An interface for asynchronously turning text into a dense vector. See [Embedding Models and Vector Types](embedding-models-and-vector-types.md).
+- **EngineProfile**: The core trait selecting host-specific contexts, processors, values, handlers, and sinks. See [Shared Engine and Language Boundaries](shared-engine-and-language-boundaries.md).
+- **Environment**: Shared storage and runtime context for a set of apps. See [Environment Configuration and Lifecycle](environment-configuration-and-lifecycle.md).
+- **EnvironmentBuilder**: The object a lifespan uses to configure settings and provide resources. See [Environment Configuration and Lifecycle](environment-configuration-and-lifecycle.md).
+- **ExceptionContext**: Metadata supplied to a background component failure handler. See [Deadlines, Cancellation, and Failures](deadlines-cancellation-and-failures.md).
+- **ExistingCanonicalPolicy**: The rule governing how existing status affects canonical entity selection. See [Entity Resolution](entity-resolution.md).
+- **External Rust workspace**: A standalone example or benchmark workspace that consumes the SDK like a downstream project. See [Contribution and Quality Checks](contribution-and-quality-checks.md).
+- **Fields mode**: A named group of fields managed on an existing SurrealDB record. See [SurrealDB Target](source-and-target-connectors-surrealdb.md).
+- **FileLike**: A file abstraction with cached metadata, reads, and content fingerprints. See [Filesystem and File Resources](filesystem-and-file-resources.md).
+- **FilePath**: A file path with an optional stable base identity. See [Filesystem and File Resources](filesystem-and-file-resources.md).
+- **Fingerprint**: A 16-byte digest used to identify values for change detection. See [Types, Serialization, and Fingerprints](types-serialization-and-fingerprints.md).
+- **`@coco.fn`**: Python decorator for tracked processing functions with optional memoization. See [Processing Functions](processing-functions.md).
+- **`generate-cli-docs`**: The hook that updates the generated CLI reference. See [Contribution and Quality Checks](contribution-and-quality-checks.md).
+- **GPU fraction**: The capacity requested from one GPU for a runner call. See [Execution Runners and GPU Pools](runtime-and-shared-mechanisms-execution-runners-and-gpu-pools.md).
+- **GPUPool**: A shared capacity tracker that grants and queues GPU reservations. See [Execution Runners and GPU Pools](runtime-and-shared-mechanisms-execution-runners-and-gpu-pools.md).
+- **High watermark**: The initial offset boundary used to determine source catch-up. See [Streaming Connectors](streaming-connectors.md).
+- **HostCtx**: Profile-specific host context passed to action sinks. See [Shared Engine and Language Boundaries](shared-engine-and-language-boundaries.md).
+- **HostRuntimeCtx**: Profile-specific runtime context passed to processors and sinks. See [Shared Engine and Language Boundaries](shared-engine-and-language-boundaries.md).
+- **IdSequencerManager**: The per-app manager that reserves and serves integer ID ranges. See [Stable ID Generation](runtime-and-shared-mechanisms-stable-id-generation.md).
+- **Index attachment**: A separately declared LanceDB vector or full-text index associated with a table’s row provider. See [LanceDB and zvec Targets](source-and-target-connectors-lancedb-and-zvec.md).
+- **Index terms**: Deduplicated source identifiers and string-content words used to build an external prefilter index. See [Structural Matching and Prefilters](structural-matching-and-prefilters.md).
+- **IndexTarget**: A Valkey search-index target whose children are documents. See [Qdrant, Turbopuffer and Valkey Targets](source-and-target-connectors-qdrant-turbopuffer-and-valkey.md).
+- **Inverted tracking**: The index mapping a target-state path to its owning component. See [Ownership, Submission, and Cleanup](ownership-submission-and-cleanup.md).
+- **IsRetryable**: Rust trait used to classify an error for retry. See [Deadlines, Cancellation, and Failures](deadlines-cancellation-and-failures.md).
+- **LazyEnvironment**: An environment initialized on demand through a lifespan. See [Environment Configuration and Lifecycle](environment-configuration-and-lifecycle.md).
+- **LiteLLMEmbedder**: Python wrapper for hosted text embeddings and vector schema discovery. See [Model Calls and Multimodal Processing](model-calls-and-multimodal-processing.md).
+- **LiteLLMTranscriber**: Python wrapper that transcribes `FileLike` audio through LiteLLM. See [Model Calls and Multimodal Processing](model-calls-and-multimodal-processing.md).
+- **Live component (`LiveComponent`)**: A component with full-pass and continuous-processing methods that can process changes after readiness. See [Live Component Lifecycle](live-component-lifecycle.md).
+- **Live mode**: An update mode that permits components to continue processing changes after readiness. See [Live Component Lifecycle](live-component-lifecycle.md).
+- **LiveComponentOperator**: The interface for updating children, running full passes, and signaling readiness. See [Live Component Lifecycle](live-component-lifecycle.md).
+- **LiveMap**: An in-memory target and view whose entries are owned by declaring components. See [Live Maps and Change Feeds](live-maps-and-change-feeds.md).
+- **LiveMapFeed**: A single-subscriber source of keyed changes without a scannable snapshot. See [Live Maps and Change Feeds](live-maps-and-change-feeds.md).
+- **LiveMapSubscriber**: The adapter that turns feed changes into component operations. See [Live Maps and Change Feeds](live-maps-and-change-feeds.md).
+- **LiveMapView**: A feed that also exposes a current-state scan. See [Live Maps and Change Feeds](live-maps-and-change-feeds.md).
+- **`llms-full.txt`**: Concatenated, converted documentation and example walkthroughs for agent consumption. See [Documentation Site and Agent Exports](documentation-site-and-agent-exports.md).
+- **Logic fingerprint**: An identity derived from a function’s logic and declared dependencies. See [Logic Change Detection](logic-change-detection.md).
+- **`logic_deps`**: Fingerprints stored with a memo for later validation. See [Logic Change Detection](logic-change-detection.md).
+- **`logic_propagated_to_callers`**: A callback wrapper that carries offered logic through intermediate tracking boundaries. See [Logic Change Detection](logic-change-detection.md).
+- **`logic_tracking`**: The mode controlling function-logic propagation. See [Logic Change Detection](logic-change-detection.md).
+- **`logic_version`**: An explicit version permitting OCI live views to reuse a committed scan on later runs. See [Cloud File Sources](cloud-file-sources.md).
+- **`managed_by`**: The setting determining whether CocoIndex manages a target container and its schema operations. See [State Diffs and Schema Evolution](state-diffs-and-schema-evolution.md).
+- **Markdown twin**: An agent-facing Markdown route generated for a documentation page or example walkthrough. See [Documentation Site and Agent Exports](documentation-site-and-agent-exports.md).
+- **Maturin**: The build backend that packages the Python project with its PyO3 extension. See [Local Setup and Builds](local-setup-and-builds.md).
+- **`maturin develop`**: The command that builds and installs the Rust-backed Python extension for local development. See [Local Setup and Builds](local-setup-and-builds.md).
+- **Memo**: Stored work reusable when its key and tracked dependencies remain valid. See [Memoization and State Reuse](memoization-and-state-reuse.md).
+- **Memo key**: A fingerprint identifying inputs for a reusable call or component execution. See [Memoization and State Reuse](memoization-and-state-reuse.md).
+- **Memo state**: Stored validation data checked after a memo key matches. See [Memoization and State Reuse](memoization-and-state-reuse.md).
+- **MemoInput**: The Rust trait supplying memo identity and optional state validation. See [Native Rust SDK](native-rust-sdk.md).
+- **MemoStateOutcome**: A state function’s new state and reuse decision. See [Memoization and State Reuse](memoization-and-state-reuse.md).
+- **Metavariable**: A pattern item that matches syntax nodes and can bind their text. See [Structural Matching and Prefilters](structural-matching-and-prefilters.md).
+- **MultiVectorSchema**: Schema for a list of vectors sharing one vector schema. See [Embedding Models and Vector Types](embedding-models-and-vector-types.md).
+- **MutualTrackingRecord**: A tracking record tagged with its management policy. See [State Diffs and Schema Evolution](state-diffs-and-schema-evolution.md).
+- **NamespaceTarget**: A Turbopuffer target whose children are rows. See [Qdrant, Turbopuffer and Valkey Targets](source-and-target-connectors-qdrant-turbopuffer-and-valkey.md).
+- **Occurrence ordinal**: The per-dependency call count included in an ID generator’s memo key. See [Stable ID Generation](runtime-and-shared-mechanisms-stable-id-generation.md).
+- **Operation handle**: An object for observing progress and awaiting an update or drop. See [App Execution and CLI](app-execution-and-cli.md).
+- **Ownership**: The mapping from a target-state path to its declaring component. See [Ownership, Submission, and Cleanup](ownership-submission-and-cleanup.md).
+- **PairResolver**: An async callable or trait that selects a matching canonical candidate and recommends which name wins. See [Entity Resolution](entity-resolution.md).
+- **Persist**: The core interface for converting a value to and from bytes. See [Shared Engine and Language Boundaries](shared-engine-and-language-boundaries.md).
+- **Precommit**: The transaction that prepares tracking and ownership claims before sink actions run. See [Ownership, Submission, and Cleanup](ownership-submission-and-cleanup.md).
+- **PrecommitSession**: Transaction-scoped state for precommit reads and deferred claims. See [LMDB Transactions and Write Batching](lmdb-transactions-and-write-batching.md).
+- **Prefilter**: A conservative required-content check run before precise structural matching. See [Structural Matching and Prefilters](structural-matching-and-prefilters.md).
+- **prek**: The runner for the repository’s configured pre-commit checks. See [Contribution and Quality Checks](contribution-and-quality-checks.md).
+- **Preview**: An update that collects planned target actions without applying them. See [App Execution and CLI](app-execution-and-cli.md).
+- **`process_file`**: The per-file processor used by embedding examples. See [Example Application Patterns](example-application-patterns.md).
+- **`process_session`**: The conversation processor that extracts and declares session data. See [Example Application Patterns](example-application-patterns.md).
+- **Processing component**: A unit of execution at a stable path that groups processing with its owned target states. See [Component Mounting and Identity](component-mounting-and-identity.md).
+- **ProcessingStats**: Versioned execution statistics with readiness and termination notifications. See [Runtime and Shared Mechanisms](runtime-and-shared-mechanisms.md).
+- **Provider generation**: An ID and schema version used to distinguish or invalidate child tracking. See [Target Declarations and Hierarchies](target-declarations-and-hierarchies.md).
+- **Readiness**: The point at which initial component work is ready for its parent. See [Component Mounting and Identity](component-mounting-and-identity.md).
+- **ReadyAwaitable**: The downstream handle whose readiness permits a streaming offset to be marked complete. See [Streaming Connectors](streaming-connectors.md).
+- **RelationTarget**: A target that declares edges between records. See [Graph Database Targets](graph-database-targets.md).
+- **Relative path**: An object name after the walker’s prefix is stripped, used as its `items()` key. See [Cloud File Sources](cloud-file-sources.md).
+- **`requires_docker`**: A pytest marker listing images required by a Docker-backed test. See [Testing and Performance](testing-and-performance.md).
+- **ResolutionEvent**: A record of one entity’s resolution step, including the raw decision and any repointing. See [Entity Resolution](entity-resolution.md).
+- **RetryWithSmallerBatch**: A signal asking a batched Python function to retry subsets of its inputs. See [Concurrency, Batching, and Rate Limits](concurrency-batching-and-rate-limits.md).
+- **RowFetcher**: A PostgreSQL table iterator that reads rows from a repeatable-read snapshot. See [PostgreSQL Source and Target](source-and-target-connectors-postgres.md).
+- **Runner**: An object that executes synchronous and asynchronous function bodies in a chosen context. See [Execution Runners and GPU Pools](runtime-and-shared-mechanisms-execution-runners-and-gpu-pools.md).
+- **RustProfile**: The Rust SDK’s private implementation of the engine’s host-specific types. See [Shared Engine and Language Boundaries](shared-engine-and-language-boundaries.md).
+- **SDK feature check**: An all-feature type check and selected optional-feature tests for the Rust SDK. See [Testing and Performance](testing-and-performance.md).
+- **sdist**: The source distribution built and uploaded alongside Python wheels. See [Packaging and Releases](packaging-releases-and-running-apps.md).
+- **Sentinel markers**: Comments delimiting the generated CLI subcommand reference in `cli.mdx`. See [Documentation Site and Agent Exports](documentation-site-and-agent-exports.md).
+- **Sidebar**: The hand-maintained tree of documentation categories and page slugs. See [Documentation Site and Agent Exports](documentation-site-and-agent-exports.md).
+- **Sink (`TargetActionSink`)**: The executor that applies batches of reconciled actions to an external system. See [Custom Target Handlers and Sinks](custom-target-handlers-and-sinks.md).
+- **Source**: A connector role that supplies external inputs to processing. See [Source and Target Connectors](source-and-target-connectors.md).
+- **SourceView**: Rendered text with segments mapping it back to the original source. See [Code Parsing and Context Views](code-parsing-and-context-views.md).
+- **SQL command attachment**: A named setup and optional teardown declaration associated with a PostgreSQL target table. See [PostgreSQL Source and Target](source-and-target-connectors-postgres.md).
+- **StableKey**: A restricted value used to construct stable paths. See [Types, Serialization, and Fingerprints](types-serialization-and-fingerprints.md).
+- **StablePathDetail**: Persisted metadata and target-state summaries for a stable path. See [Inspection, Progress, and Telemetry](inspection-progress-and-telemetry.md).
+- **StateHandle**: The API handle used to read and update component-owned user state. See [Persistent State and User State](persistent-state-and-user-state.md).
+- **StatsGroupHandle**: A handle for separately aggregated statistics within a `stats_group` scope. See [Inspection, Progress, and Telemetry](inspection-progress-and-telemetry.md).
+- **Stream Load**: Doris’s HTTP bulk ingestion path for rows. See [SQLite and Doris Targets](source-and-target-connectors-sqlite-and-doris.md).
+- **SyncFunction / AsyncFunction**: Python function wrappers selected according to the callable’s execution interface. See [Processing Functions](processing-functions.md).
+- **TableSchema**: Connector-specific column definitions and primary-key fields used for table reconciliation. See [State Diffs and Schema Evolution](state-diffs-and-schema-evolution.md).
+- **TableTarget**: A target that declares rows or records in a table or graph node label. See [Source and Target Connectors](source-and-target-connectors.md).
+- **Target**: A connector role that keeps external state aligned with declarations. See [Source and Target Connectors](source-and-target-connectors.md).
+- **Target state**: A keyed desired value declared through a target provider. See [Target Declarations and Hierarchies](target-declarations-and-hierarchies.md).
+- **TargetHandler**: The interface that computes reconciliation output for one kind of target state. See [Custom Target Handlers and Sinks](custom-target-handlers-and-sinks.md).
+- **TargetStatePath**: A fingerprinted path identifying a target state within its provider hierarchy. See [Target Declarations and Hierarchies](target-declarations-and-hierarchies.md).
+- **TargetStateProvider**: An object that associates a target-state path with a handler and creates keyed states. See [Target Declarations and Hierarchies](target-declarations-and-hierarchies.md).
+- **TextPosition**: A byte offset, character offset, and 1-based line and column in source text. See [Text Splitting and Provenance](text-splitting-and-provenance.md).
+- **Tombstone (component)**: A durable marker for a disappeared component awaiting cleanup. See [Ownership, Submission, and Cleanup](ownership-submission-and-cleanup.md).
+- **Tombstone (Kafka)**: A message with a null value, interpreted by the keyed map feed as a deletion. See [Streaming Connectors](streaming-connectors.md).
+- **`topic_as_map`**: A Kafka source supplying keyed items to `mount_each`. See [Streaming Connectors](streaming-connectors.md).
+- **Tracking record**: Persisted handler-defined information used to compare a target with later declarations. See [Custom Target Handlers and Sinks](custom-target-handlers-and-sinks.md).
+- **TrackingInfo**: A component’s persisted version and target-state tracking records. See [Persistent State and User State](persistent-state-and-user-state.md).
+- **TrackingRecordTransition**: Desired and possible previous tracking records, including missing-state information. See [State Diffs and Schema Evolution](state-diffs-and-schema-evolution.md).
+- **UpdateSnapshot**: A statistics snapshot, status, and optional update result. See [Inspection, Progress, and Telemetry](inspection-progress-and-telemetry.md).
+- **`use_mount`**: A foreground mount that returns the child component’s result. See [Component Mounting and Identity](component-mounting-and-identity.md).
+- **Vec0TableDef**: SQLite virtual-table configuration for sqlite-vec. See [SQLite and Doris Targets](source-and-target-connectors-sqlite-and-doris.md).
+- **Vector schema provider (`VectorSchemaProvider`)**: An object supplying vector element type and dimension for connector schema definitions. See [Embedding Models and Vector Types](embedding-models-and-vector-types.md).
+- **VectorSchema**: The element type and dimension needed to describe a vector column. See [Embedding Models and Vector Types](embedding-models-and-vector-types.md).
+- **WriteTxn**: The transaction wrapper passed to batched LMDB write bodies. See [LMDB Transactions and Write Batching](lmdb-transactions-and-write-batching.md).

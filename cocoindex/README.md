@@ -1,0 +1,62 @@
+# Wiki
+
+> Generated documentation. Each page cites the source files it describes.
+
+- [Overview](overview.md): What the project is, its main parts and how they fit, and where to read next.
+- [System Architecture](system-architecture.md): Explain how declarative pipelines, the shared incremental engine, persistence, connectors, and the Python and Rust interfaces fit together. Direct readers to detailed subsystem pages.
+  - [Declarative Processing Model](declarative-processing-model.md): Trace a source-to-target pipeline through an app, processing components, stable paths, memoized functions, and declared target states; explain how these concepts enable incremental updates and cleanup.
+  - [Shared Engine and Language Boundaries](shared-engine-and-language-boundaries.md): Explain EngineProfile and trace how the Python extension and native Rust SDK adapt host contexts, processors, persisted values, target handlers, and action sinks to the shared engine.
+  - [Native Rust SDK](native-rust-sdk.md): Explain the Rust SDK's public API, Ctx-based pipeline programming, procedural macros, feature gates, and direct integration with the core engine.
+- [Incremental Execution](incremental-execution.md): Trace an app update through root and child component execution, prior-state reuse, and live processing; link to the detailed mechanisms.
+  - [App Execution and CLI](app-execution-and-cli.md): Cover app construction and loading, update options, previews, drops, and operation handles across Python, CLI, and Rust.
+  - [Component Mounting and Identity](component-mounting-and-identity.md): Explain foreground and background mounts, readiness, keyed fan-out, and stable paths that identify child components.
+  - [Processing Functions](processing-functions.md): Explain decorated Python functions, sync and async execution, bound methods, and processor adapters, with the corresponding Rust function interface.
+  - [Memoization and State Reuse](memoization-and-state-reuse.md): Explain component and function memoization, input keys, tracked state validation, dependency reuse, and restoration of cached declarations.
+    - [Logic Change Detection](logic-change-detection.md): Explain logic fingerprints, versions and declared dependencies, registry validation, and propagation of changes to callers.
+  - [Live Component Lifecycle](live-component-lifecycle.md): Describe catch-up and live modes, readiness, keyed and full updates, periodic refresh, cancellation, and shutdown.
+  - [Live Maps and Change Feeds](live-maps-and-change-feeds.md): Explain feed and view interfaces, snapshot and subscription ordering, keyed change delivery, and in-memory LiveMap ownership and watch behavior.
+- [Target Reconciliation](target-reconciliation.md): Explain how component declarations become reconciled external actions, tracking records, and committed ownership; connect the stages and their failure boundaries.
+  - [Target Declarations and Hierarchies](target-declarations-and-hierarchies.md): Explain root providers, stable keyed target states, child providers, attachments, provider generations, and child invalidation.
+  - [Ownership, Submission, and Cleanup](ownership-submission-and-cleanup.md): Trace precommit reads and claims, action application, commit ordering, ownership transfer, tombstones, and cleanup of disappeared components and declarations.
+  - [Custom Target Handlers and Sinks](custom-target-handlers-and-sinks.md): Explain the handler and sink contracts, tracking records, child handler factories, retry-safe reconciliation, idempotent actions, shared batching, and failure isolation.
+  - [State Diffs and Schema Evolution](state-diffs-and-schema-evolution.md): Explain tracking record transitions, managed ownership policies, composite diffs, schema comparisons, and how destructive or lossy transitions affect child state.
+- [Source and Target Connectors](source-and-target-connectors.md): Map built-in integrations by source and target roles, supported live feeds, language availability, and shared connector helpers.
+  - [Filesystem and File Resources](filesystem-and-file-resources.md): Explain file paths, metadata and content fingerprints, path matching, directory traversal, live watching, and filesystem target reconciliation in Python and Rust.
+  - [Cloud File Sources](cloud-file-sources.md): Compare object storage and Google Drive enumeration, file identity, metadata and content access, including OCI's optional event-driven live view.
+  - [Relational Database Connectors](relational-database-connectors.md): Compare PostgreSQL, SQLite and Doris source and target capabilities, table schemas, row synchronization and indexes; link to connector-specific details.
+    - [PostgreSQL Source and Target](source-and-target-connectors-postgres.md): Trace repeatable-read source enumeration and keyed rows, then PostgreSQL table, row and index reconciliation in the Python and Rust connectors.
+    - [SQLite and Doris Targets](source-and-target-connectors-sqlite-and-doris.md): Explain table and row synchronization, schema changes, and vector and other index management in SQLite and Doris.
+  - [Warehouse Connectors](warehouse-connectors.md): Compare BigQuery and Snowflake table schema reconciliation, value encoding, row upserts and deletes.
+  - [Vector and Key-Value Targets](vector-and-key-value-targets.md): Compare target containers, vector schemas, indexes and record models across LanceDB, zvec, Qdrant, Turbopuffer and Valkey; direct readers to implementation details.
+    - [LanceDB and zvec Targets](source-and-target-connectors-lancedb-and-zvec.md): Explain embedded table and collection schemas, vector and full-text indexes, and row or document synchronization.
+    - [Qdrant, Turbopuffer and Valkey Targets](source-and-target-connectors-qdrant-turbopuffer-and-valkey.md): Explain collection, namespace and index management, vector definitions, and point, row and document synchronization.
+  - [Graph Database Targets](graph-database-targets.md): Compare graph connections, table and relation targets, record ownership and vector indexes across Neo4j, FalkorDB and SurrealDB.
+    - [Neo4j and FalkorDB Targets](source-and-target-connectors-cypher-graph-targets.md): Explain node and relationship declarations, Cypher action ordering, schema and vector index management, including the Rust SDK's shared Cypher graph implementation.
+    - [SurrealDB Target](source-and-target-connectors-surrealdb.md): Explain record and relation targets, field ownership, table schema, action ordering and vector indexes.
+  - [Streaming Connectors](streaming-connectors.md): Explain Kafka and Iggy streams and keyed maps, catch-up boundaries, ordered offset acknowledgment, single-watcher behavior and message targets.
+- [Transformation and Intelligence](transformation-and-intelligence.md): Overview of composable operations for splitting, code analysis, embeddings, model calls, and entity resolution in Python and Rust.
+  - [Text Splitting and Provenance](text-splitting-and-provenance.md): Explain separator and recursive splitting, language-aware boundaries, overlap, fallback behavior, and position-tracked chunks.
+  - [Code Parsing and Context Views](code-parsing-and-context-views.md): Explain reusable parsed sources, language registration, semantic elements, syntax-aware splitting, and source-grounded context views.
+    - [Structural Matching and Prefilters](structural-matching-and-prefilters.md): Explain pattern compilation, metavariables and captures, language-specific matching, prefilters, and index terms.
+  - [Embedding Models and Vector Types](embedding-models-and-vector-types.md): Explain embedder interfaces, local text and image embedding, vector schema metadata, and embedding workflows.
+  - [Model Calls and Multimodal Processing](model-calls-and-multimodal-processing.md): Describe LiteLLM and Rust HTTP integrations for hosted embeddings, transcription, and JSON chat, alongside model-call and image-processing examples.
+  - [Entity Resolution](entity-resolution.md): Explain embedding-based candidate selection, pair resolvers, canonical policies, component partitioning, and resolution events in Python and Rust.
+- [Runtime and Shared Mechanisms](runtime-and-shared-mechanisms.md): Orient readers to environments, shared execution resources, persistent state, and operational visibility across the Python and Rust APIs.
+  - [Context, Resources, and Identity](context-resources-and-identity.md): Explain typed context providers, tracked resource dependencies, component context propagation, and thread attachment. Introduce stable ID generation and link to its detailed page.
+    - [Stable ID Generation](runtime-and-shared-mechanisms-stable-id-generation.md): Explain memoized IDs and UUIDs, generators for repeated dependencies, occurrence ordinals, and batched allocation by the core ID sequencer.
+  - [Environment Configuration and Lifecycle](environment-configuration-and-lifecycle.md): Explain settings and environment variables, lifespan-managed resources, default and explicit environments, event loops, runtime startup, and shutdown.
+  - [Persistent State and User State](persistent-state-and-user-state.md): Describe LMDB app stores, persisted component and target records, memo values, and explicit user state; link to transaction internals.
+    - [LMDB Transactions and Write Batching](lmdb-transactions-and-write-batching.md): Explain the single-writer batcher, retryable transaction bodies, thread affinity, map resizing, and submission commit plans.
+  - [Types, Serialization, and Fingerprints](types-serialization-and-fingerprints.md): Explain Python type interpretation, durable serialization and restricted unpickling, the separate compact in-memory target-state codec, and fingerprints used for change detection.
+  - [Concurrency, Batching, and Rate Limits](concurrency-batching-and-rate-limits.md): Explain component admission and token lending, shared batch queues, function and sink batching, and rate limiting. Introduce execution runners and link to their detailed page.
+    - [Execution Runners and GPU Pools](runtime-and-shared-mechanisms-execution-runners-and-gpu-pools.md): Explain Python execution runners, subprocess execution, GPU allocation and fractions, and the shared GPU pool.
+  - [Deadlines, Cancellation, and Failures](deadlines-cancellation-and-failures.md): Explain deadline propagation, cancellation checks, exception handler chains, transient retry classification, and failure isolation.
+  - [Inspection, Progress, and Telemetry](inspection-progress-and-telemetry.md): Describe persisted-state inspection, progress and statistics handles, terminal reporting, and telemetry controls.
+- [Development](development.md): Orient contributors to the repository's build, validation, examples, documentation and release workflows.
+  - [Local Setup and Builds](local-setup-and-builds.md): Set up Rust, uv and prek; build and rebuild the Python extension; select optional dependencies; and run examples against a local checkout.
+  - [Testing and Performance](testing-and-performance.md): Explain test environments, Docker-backed fixtures, CI test matrices, Rust SDK feature checks and benchmark workflows.
+  - [Contribution and Quality Checks](contribution-and-quality-checks.md): Cover contributor conventions, prek hooks, formatting, linting, generated artifacts and checks for core and SDK changes.
+  - [Example Application Patterns](example-application-patterns.md): Connect runnable Python and Rust examples to retrieval, document processing, knowledge graphs and streaming pipelines.
+  - [Packaging and Releases](packaging-releases-and-running-apps.md): Explain version synchronization, wheel and source distribution builds, release validation and publishing; link to runtime configuration and CLI pages for operating apps.
+  - [Documentation Site and Agent Exports](documentation-site-and-agent-exports.md): Describe the Astro build, sidebar navigation, inline diagram components, generated CLI reference and machine-readable documentation routes.
+- [Glossary](glossary.md): Project-specific terms, each with a one-line meaning and the page that explains it.
